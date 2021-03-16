@@ -6,7 +6,7 @@ pipeline {
                 sh 'GIT_BRANCH="refs/heads/\$(git branch --show-current)"'
                 echo "Git Branch :: $GIT_BRANCH"
                 sh "GIT_HASH=\$(git rev-parse HEAD)"
-                echo "Git Branch :: $GIT_HASH"
+                echo "Git Hash :: $GIT_HASH"
             }
         }
         stage('Build and Analyse Stage') {
