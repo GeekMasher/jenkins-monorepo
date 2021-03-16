@@ -1,6 +1,12 @@
 pipeline {
     agent any
     stages {
+        stage('Init') {
+            steps {
+                sh "GIT_BRANCH=refs/heads/$(git branch --show-current)"
+                sh "GIT_HASH=$(git rev-parse HEAD)"
+            }
+        }
         stage('Build and Analyse Stage') {
             failFast true
             parallel {
@@ -13,7 +19,7 @@ pipeline {
                             // Build
                             sh "dotnet build -c Release ./WebApp/WebApp.csproj"
 
-                            sh "codeql-runner analyze --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth ${GITHUB_TOKEN}  --commit $(git rev-parse HEAD) --ref refs/heads/$(git branch --show-current)"
+                            sh "codeql-runner analyze --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth ${GITHUB_TOKEN}  --commit ${GIT_HASH} --ref ${GIT_BRANCH}"
                         }
                     }
                 }
@@ -25,7 +31,7 @@ pipeline {
                         // Build
                         sh "dotnet build -c Release ./WebAPI/WebAPI.csproj"
                         
-                        sh "codeql-runner analyze --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth ${GITHUB_TOKEN}  --commit $(git rev-parse HEAD) --ref refs/heads/$(git branch --show-current)"
+                        sh "codeql-runner analyze --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth ${GITHUB_TOKEN}  --commit ${GIT_HASH} --ref ${GIT_BRANCH}"
                     }
                 }
             }
