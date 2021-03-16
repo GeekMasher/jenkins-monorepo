@@ -3,10 +3,8 @@ pipeline {
     stages {
         stage('Init') {
             steps {
-                sh 'GIT_BRANCH="refs/heads/\$(git branch --show-current)"'
-                echo "Git Branch :: $GIT_BRANCH"
-                sh "GIT_HASH=\$(git rev-parse HEAD)"
-                echo "Git Hash :: $GIT_HASH"
+                sh 'export GIT_BRANCH="refs/heads/\$(git branch --show-current)"'
+                sh "export GIT_HASH=\$(git rev-parse HEAD)"
             }
         }
         stage('Build and Analyse Stage') {
