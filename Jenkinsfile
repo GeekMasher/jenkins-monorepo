@@ -17,8 +17,8 @@ pipeline {
         stage('Init') {
             steps {
                 // Just to make sure everything is clean for the `Build and Analyse Stage`
-                sh "rm -r ${CODEQL_DATABASES}"
-                sh "rm -r ${CODEQL_RESULTS}"
+                sh "rm -r ${CODEQL_DATABASES} 2> /dev/null || true"
+                sh "rm -r ${CODEQL_RESULTS} 2> /dev/null || true"
 
                 sh "mkdir -p ${CODEQL_RESULTS}"
             }
