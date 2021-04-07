@@ -37,6 +37,7 @@ pipeline {
                         // Build and Analyze
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
+                            --search-path=\"$CODEQL_SEARCH_PATH\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
                     }
@@ -64,6 +65,7 @@ pipeline {
                         // Build and Analyze
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
+                            --search-path=\"$CODEQL_SEARCH_PATH\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
                     }
