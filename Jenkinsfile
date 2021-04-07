@@ -30,6 +30,7 @@ pipeline {
                         sh "codeql database create \
                             --language=${CODEQL_LANGUAGE} \
                             --command=\"${BUILD_COMMAND}\" \
+                            --search-path=\"$CODEQL_SEARCH_PATH\" \
                             ${CODEQL_DATABASE}"
                         sh "codeql database upgrade ${CODEQL_DATABASE}"
 
@@ -56,6 +57,7 @@ pipeline {
                         sh "codeql database create \
                             --language=${CODEQL_LANGUAGE} \
                             --command=\"${BUILD_COMMAND}\" \
+                            --search-path=\"$CODEQL_SEARCH_PATH\" \
                             ${CODEQL_DATABASE}"
                         sh "codeql database upgrade ${CODEQL_DATABASE}"
 
