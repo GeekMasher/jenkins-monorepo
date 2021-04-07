@@ -33,6 +33,13 @@ pipeline {
                 }
             }
         }
+        stage('Failed-Debugging') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh "echo '${BUILD_ID}' > build-id.txt"
+                }
+            }
+        }
         stage('Upload') {
             steps {
                 echo "Placeholder..."
