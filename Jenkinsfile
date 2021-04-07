@@ -45,7 +45,7 @@ pipeline {
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
                         // Stash for cross-agent support
-                        stash includes: '${CODEQL_RESULTS}', name: 'sarif'
+                        stash includes: '${CODEQL_RESULTS}/**.sarif', name: 'sarif'
                     }
                 }
                 stage('Api') {
@@ -76,7 +76,7 @@ pipeline {
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
                         // Stash for cross-agent support
-                        stash includes: '${CODEQL_RESULTS}', name: 'sarif'
+                        stash includes: '${CODEQL_RESULTS}/**.sarif', name: 'sarif'
                     }
                 }
             }
