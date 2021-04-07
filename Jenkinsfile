@@ -15,38 +15,50 @@ pipeline {
             failFast true
             parallel {
                 stage('App') {
-                    steps {
-                        // Init
-                        sh "export CODEQL_DATABASE=${CODEQL_DATABASES}/${STAGE_NAME}"
-                        sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
-
-                        // CodeQL Init
-                        sh "codeql database create --language=csharp ${CODEQL_DATABASE}"
-                        sh "codeql database upgrade ${CODEQL_DATABASE}"
-
-                        // Build and Analyze
-                        sh "codeql database analßyze \
-                            --format=\"sarif-latest\" \
-                            --output=\"${CODEQL_RESULTS}/${STAGE_NAME}.sarif\" \
-                            --command=\"dotnet build -c Release ./WebApp/WebApp.csproj\" \
-                            ${CODEQL_DATABASE} ${CODEQL_SUITE}"
+                    environment {
+                        // Build command
+                        BUILD_COMMAND = "dotnet build -c Release ./WebApp/WebApp.csproj"
+                        // CodeQL
+                        CODEQL_DATABASE = "${CODEQL_DATABASES}/${STAGE_NAME}"
+                        CODEQL_LANGUAGE = "csharp"
                     }
-                }
-                stage('Api') {
                     steps {
                         // Init
-                        sh "export CODEQL_DATABASE=${CODEQL_DATABASES}/${STAGE_NAME}"
                         sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
 
                         // CodeQL Init
-                        sh "codeql database create --language=csharp ${CODEQL_DATABASE}"
+                        sh "codeql database create --language=${CODEQL_LANGUAGE} ${CODEQL_DATABASE}"
                         sh "codeql database upgrade ${CODEQL_DATABASE}"
 
                         // Build and Analyze
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
-                            --output=\"${CODEQL_RESULTS}/${STAGE_NAME}.sarif\" \
-                            --command=\"dotnet build -c Release ./WebApp/WebApp.csproj\" \
+                            --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
+                            --command=\"${BUILD_COMMAND}\" \
+                            ${CODEQL_DATABASE} ${CODEQL_SUITE}"
+                    }
+                }
+                stage('Api') {
+                    environment {
+                        // Build command
+                        BUILD_COMMAND = "dotnet build -c Release ./WebApi/WebApi.csproj"
+                        // CodeQL
+                        CODEQL_DATABASE = "${CODEQL_DATABASES}/${STAGE_NAME}"
+                        CODEQL_LANGUAGE = "csharp"
+                    }
+                    steps {
+                        // Init
+                        sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
+
+                        // CodeQL Init
+                        sh "codeql database create --language=${CODEQL_LANGUAGE} ${CODEQL_DATABASE}"
+                        sh "codeql database upgrade ${CODEQL_DATABASE}"
+
+                        // Build and Analyze
+                        sh "codeql database analyze \
+                            --format=\"sarif-latest\" \
+                            --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
+                            --command=\"${BUILD_COMMAND}\" \
                             ${CODEQL_DATABASE} ${CODEQL_SUITE}"
                     }
                 }
