@@ -8,7 +8,7 @@ pipeline {
                     steps {
                         withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                             sh "codeql-runner init --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth $GITHUB_TOKEN --queries security-and-quality --temp-dir '.codeql-runner-${STAGE_NAME}'"
-                            sh ". .codeql-runner-${STAGE_NAME}/codeql-runner/codeql-env.sh"
+                            sh "source .codeql-runner-${STAGE_NAME}/codeql-runner/codeql-env.sh"
 
                             // Build
                             sh "dotnet build -c Release ./WebApp/WebApp.csproj"
@@ -22,7 +22,7 @@ pipeline {
                         
                         withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                             sh "codeql-runner init --repository GeekMasher/jenkins-monorepo --github-url https://github.com --github-auth $GITHUB_TOKEN --queries security-and-quality --temp-dir '.codeql-runner-${STAGE_NAME}'"
-                            sh ". .codeql-runner-${STAGE_NAME}/codeql-runner/codeql-env.sh"
+                            sh "source .codeql-runner-${STAGE_NAME}/codeql-runner/codeql-env.sh"
 
                             // Build
                             sh "dotnet build -c Release ./WebAPI/WebAPI.csproj"
