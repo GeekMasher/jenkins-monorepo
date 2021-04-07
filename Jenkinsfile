@@ -27,14 +27,16 @@ pipeline {
                         sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
 
                         // CodeQL Init
-                        sh "codeql database create --language=${CODEQL_LANGUAGE} ${CODEQL_DATABASE}"
+                        sh "codeql database create \
+                            --language=${CODEQL_LANGUAGE} \
+                            --command=\"${BUILD_COMMAND}\" \
+                            ${CODEQL_DATABASE}"
                         sh "codeql database upgrade ${CODEQL_DATABASE}"
 
                         // Build and Analyze
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
-                            --command=\"${BUILD_COMMAND}\" \
                             ${CODEQL_DATABASE} ${CODEQL_SUITE}"
                     }
                 }
@@ -51,14 +53,16 @@ pipeline {
                         sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
 
                         // CodeQL Init
-                        sh "codeql database create --language=${CODEQL_LANGUAGE} ${CODEQL_DATABASE}"
+                        sh "codeql database create \
+                            --language=${CODEQL_LANGUAGE} \
+                            --command=\"${BUILD_COMMAND}\" \
+                            ${CODEQL_DATABASE}"
                         sh "codeql database upgrade ${CODEQL_DATABASE}"
 
                         // Build and Analyze
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
-                            --command=\"${BUILD_COMMAND}\" \
                             ${CODEQL_DATABASE} ${CODEQL_SUITE}"
                     }
                 }
