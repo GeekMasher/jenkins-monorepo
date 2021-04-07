@@ -37,7 +37,7 @@ pipeline {
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
-                            ${CODEQL_DATABASE} ${CODEQL_SUITE}"
+                            ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
                     }
                 }
                 stage('Api') {
@@ -63,7 +63,7 @@ pipeline {
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
-                            ${CODEQL_DATABASE} ${CODEQL_SUITE}"
+                            ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
                     }
                 }
             }
