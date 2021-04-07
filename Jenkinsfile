@@ -51,8 +51,6 @@ pipeline {
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
-                        // Stash for cross-agent support
-                        stash includes: '${CODEQL_RESULTS}/*.sarif', name: 'sarif'
                     }
                 }
                 stage('Api') {
@@ -79,8 +77,6 @@ pipeline {
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
-                        // Stash for cross-agent support
-                        stash includes: '${CODEQL_RESULTS}/*.sarif', name: 'sarif'
                     }
                 }
             }
@@ -88,8 +84,6 @@ pipeline {
         stage('Upload') {
             // Upload to GitHub
             steps {
-                // Unstash SARIF files
-                unstash 'sarif'
                 // Currently using the Runner due to the CLI does not have the 
                 // ability to upload folders of SARIF files.
                 sh "codeql-runner upload \
