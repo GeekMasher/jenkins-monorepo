@@ -30,7 +30,6 @@ pipeline {
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}.sarif\" \
                             --command=\"dotnet build -c Release ./WebApp/WebApp.csproj\" \
                             ${CODEQL_DATABASE} ${CODEQL_SUITE}"
-                        }
                     }
                 }
                 stage('Api') {
