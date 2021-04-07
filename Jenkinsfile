@@ -61,7 +61,7 @@ pipeline {
                 stage('Api') {
                     environment {
                         // Build command
-                        BUILD_COMMAND = "dotnet build -c Release ./WebApi/WebApi.csproj"
+                        BUILD_COMMAND = "dotnet build -c Release ./WebAPI/WebAPI.csproj"
                         // CodeQL
                         CODEQL_DATABASE = "${CODEQL_DATABASES}/${STAGE_NAME}"
                         CODEQL_LANGUAGE = "csharp"
