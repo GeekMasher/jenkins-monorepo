@@ -14,6 +14,16 @@ pipeline {
     }
 
     stages {
+        stage('Init') {
+            steps {
+                // Just to make sure everything is clean for the `Build and Analyse Stage`
+                sh "rm -r ${CODEQL_DATABASES}"
+                sh "rm -r ${CODEQL_RESULTS}"
+
+                sh "mkdir -p ${CODEQL_RESULTS}"
+            }
+        }
+
         stage('Build and Analyse Stage') {
             failFast true
             parallel {
@@ -27,7 +37,7 @@ pipeline {
                     }
                     steps {
                         // Init
-                        sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
+                        sh "mkdir -p ${CODEQL_DATABASE}"
 
                         // CodeQL Init
                         sh "codeql database create \
@@ -58,7 +68,7 @@ pipeline {
                     }
                     steps {
                         // Init
-                        sh "mkdir -p ${CODEQL_DATABASE} ${CODEQL_RESULTS}"
+                        sh "mkdir -p ${CODEQL_DATABASE}"
 
                         // CodeQL Init
                         sh "codeql database create \
