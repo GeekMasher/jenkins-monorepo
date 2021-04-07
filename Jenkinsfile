@@ -20,7 +20,7 @@ pipeline {
                 sh "rm -r ${CODEQL_DATABASES} 2> /dev/null || true"
                 sh "rm -r ${CODEQL_RESULTS} 2> /dev/null || true"
 
-                sh "mkdir -p ${CODEQL_RESULTS}"
+                sh "mkdir -p ${CODEQL_DATABASES} ${CODEQL_RESULTS}"
             }
         }
 
@@ -36,9 +36,6 @@ pipeline {
                         CODEQL_LANGUAGE = "csharp"
                     }
                     steps {
-                        // Init
-                        sh "mkdir -p ${CODEQL_DATABASE}"
-
                         // CodeQL Init
                         sh "codeql database create \
                             --language=${CODEQL_LANGUAGE} \
@@ -67,9 +64,6 @@ pipeline {
                         CODEQL_LANGUAGE = "csharp"
                     }
                     steps {
-                        // Init
-                        sh "mkdir -p ${CODEQL_DATABASE}"
-
                         // CodeQL Init
                         sh "codeql database create \
                             --language=${CODEQL_LANGUAGE} \
