@@ -3,7 +3,10 @@ pipeline {
 
     environment {
         // GitHub
-        GITHUB_TOKEN     = credentials('github-token')
+        GITHUB_DOMAIN     = "https://github.com"
+        GITHUB_TOKEN      = credentials('github-token')
+        GITHUB_REPOSITORY = "GeekMasher/jenkins-monorepo"
+
         // CodeQL
         CODEQL_DATABASES = '.codeql'
         CODEQL_RESULTS   = '.codeql-results'
@@ -73,16 +76,13 @@ pipeline {
             }
         }
         stage('Upload') {
-            environment {
-                GITHUB_REPOSITORY = "GeekMasher/jenkins-monorepo"
-            }
-
             // Upload to GitHub
             steps {
                 // Currently using the Runner due to the CLI does not have the 
                 // ability to upload folders of SARIF files.
                 sh "codeql-runner upload \
                     --sarif-file ${CODEQL_RESULTS} \
+                    --github-url ${GITHUB_DOMAIN} \
                     --repository ${GITHUB_REPOSITORY} \
                     --commit \$(git rev-parse HEAD) \
                     --ref refs/heads/testing"
