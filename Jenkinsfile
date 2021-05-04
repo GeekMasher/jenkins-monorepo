@@ -6,6 +6,7 @@ pipeline {
         GITHUB_DOMAIN     = "https://github.com"
         GITHUB_TOKEN      = credentials('github-token')
         GITHUB_REPOSITORY = "GeekMasher/jenkins-monorepo"
+        GITHUB_REF        = "refs/heads/master"
 
         // CodeQL
         CODEQL_DATABASES = '.codeql'
@@ -48,9 +49,15 @@ pipeline {
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --search-path=\"$CODEQL_SEARCH_PATH\" \
+                            --sarif-category="${STAGE_NAME}" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
+                        sh "codeql github upload-results \
+                            --repository="${GITHUB_REPOSITORY}" \
+                            --commit="\$(git rev-parse HEAD)" \
+                            --ref="${GITHUB_REF}" \
+                            --sarif=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\""
                     }
                 }
                 stage('Api') {
@@ -74,25 +81,17 @@ pipeline {
                         sh "codeql database analyze \
                             --format=\"sarif-latest\" \
                             --search-path=\"$CODEQL_SEARCH_PATH\" \
+                            --sarif-category="${STAGE_NAME}" \
                             --output=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\" \
                             ${CODEQL_DATABASE} ${CODEQL_LANGUAGE}-${CODEQL_SUITE}"
 
+                        sh "codeql github upload-results \
+                            --repository="${GITHUB_REPOSITORY}" \
+                            --commit="\$(git rev-parse HEAD)" \
+                            --ref="${GITHUB_REF}" \
+                            --sarif=\"${CODEQL_RESULTS}/${STAGE_NAME}-${CODEQL_LANGUAGE}.sarif\""
                     }
                 }
-            }
-        }
-        stage('Upload') {
-            // Upload to GitHub
-            steps {
-                // Currently using the Runner due to the CLI does not have the 
-                // ability to upload folders of SARIF files.
-                sh "codeql-runner upload \
-                    --sarif-file ${CODEQL_RESULTS} \
-                    --github-url ${GITHUB_DOMAIN} \
-                    --repository ${GITHUB_REPOSITORY} \
-                    --commit \$(git rev-parse HEAD) \
-                    --ref refs/heads/testing"
-                // TODO: Fix hardcoded branch ref
             }
         }
     }
